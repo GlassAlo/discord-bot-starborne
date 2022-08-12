@@ -21,7 +21,7 @@ bot.client.on('messageCreate', async (message) => {
     if (!cmd) return;
 
     try {
-        await cmd.run(bot.client, message);
+        await cmd.run(bot, message);
     } catch (error) {
         console.error(error);
         message.channel.createMessage(`An error occured while running the command ${command}`);
@@ -33,7 +33,7 @@ bot.client.on('interactionCreate', async (interaction) => {
     if (!command) return;
 
     try {
-        await command.run(bot.client, interaction);
+        await command.run(bot, interaction);
     } catch (error) {
         console.error(error);
         interaction.message.channel.createMessage(`An error occured while running the command ${interaction.commandName}`);

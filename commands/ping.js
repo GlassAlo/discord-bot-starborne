@@ -17,13 +17,16 @@ module.exports = {
         .setDescription(`${description}`),
 
         run: async (bot, message) => {
+            let reply_holder = null;
+
             // Check if the message is an interaction
             if (message.type == 2) {
                 // Send the message
-                message.reply(`Pong! \`${message.timestamp - message.createdTimestamp}ms\``);
+                reply_holder = message
             } else {
                 // Send the message
-                message.channel.send(`Pong! \`${message.timestamp - message.createdTimestamp}ms\``);
+                reply_holder = message
             }
+            reply_holder.reply(`Pong!`);
     }
 };

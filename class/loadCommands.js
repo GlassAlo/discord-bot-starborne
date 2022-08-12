@@ -6,6 +6,8 @@ const { Routes } = require("discord.js");
 async function initCommands() {
     const commandsPath = path.join(__dirname, "../commands");
     let commandsFiles = null;
+    this.commands_list = [];
+
     try {
         commandsFiles = fs
             .readdirSync(commandsPath)
@@ -14,10 +16,10 @@ async function initCommands() {
         console.log("ERROR = " + error);
         return
     }
-    this.commands_list = [];
     for (const file of commandsFiles) {
         const filePath = path.join(commandsPath, file);
         const command = require(filePath);
+
         this.client.commands.set(command.data.name, command);
         this.commands_list.push(command.data.toJSON());
         console.log(`Loaded command ${command.data.name}`);
@@ -27,6 +29,7 @@ async function initCommands() {
   // Init commands for all guilds
 async function loadCommands() {
     await this.initCommands()
+
     if (this.commands_list == null) {
         return
     }
