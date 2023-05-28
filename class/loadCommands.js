@@ -1,34 +1,36 @@
-const path = require("node:path");
-const fs = require("node:fs");
-const { Routes } = require("discord.js");
+const fs = require('node:fs');
+const path = require('node:path');
+const { Routes } = require('discord-api-types/v10');
 
-// Init the commands from the command folder
-async function initCommands() {
-    const commandsPath = path.join(__dirname, "../commands");
-    let commandsFiles = null;
-    this.commands_list = [];
+async function registerCommand(commandName, folderPath) {
+    const commandPath = path.join(folderPath, commandName);
+    const command = require(commandPath);
 
-    try {
-        commandsFiles = fs
-            .readdirSync(commandsPath)
-            .filter((file) => file.endsWith(".js"));
-    } catch (error) {
-        console.log("ERROR = " + error);
-        return
-    }
-    for (const file of commandsFiles) {
-        const filePath = path.join(commandsPath, file);
-        const command = require(filePath);
+    this.client.commands.set(command.data.name, command);
+    this.commands_list.push(command.data.toJSON());
+    console.log(`Loaded command ${command.data.name}`);
+}
 
-        this.client.commands.set(command.data.name, command);
-        this.commands_list.push(command.data.toJSON());
-        console.log(`Loaded command ${command.data.name}`);
+async function initCommands(fsFolder, pathToFolder) {
+    for (const item of fsFolder) {
+        if (fs.lstatSync(path.join(pathToFolder, item)).isDirectory()) {
+            const newPath = path.join(pathToFolder, item);
+            const newFSFolder = fs.readdirSync(newPath);
+
+            await this.initCommands(newFSFolder, newPath);
+        } else {
+            await this.registerCommand(item, pathToFolder);
+        }
     }
 }
 
-  // Init commands for all guilds
+// Init commands for all guilds
 async function loadCommands() {
-    await this.initCommands()
+    const commandsFolderPath = path.join(__dirname, '../commands');
+    const commandFolders = fs.readdirSync(commandsFolderPath);
+    this.commands_list = [];
+
+    await this.initCommands(commandFolders, commandsFolderPath);
 
     if (this.commands_list == null) {
         return
@@ -46,4 +48,5 @@ async function loadCommands() {
 module.exports = {
     initCommands,
     loadCommands,
+    registerCommand
 }

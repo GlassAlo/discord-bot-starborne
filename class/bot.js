@@ -1,7 +1,8 @@
 const { Client, Collection, GatewayIntentBits } = require("discord.js");
 const { REST } = require("@discordjs/rest");
 
-const { initCommands, loadCommands } = require("./loadCommands.js");
+const { initCommands, loadCommands, registerCommand } = require("./loadCommands.js");
+const { initEvents, loadEvents, registerEvent } = require("./loadEvents.js");
 
 const intentsList = [
     GatewayIntentBits.Guilds,
@@ -10,7 +11,7 @@ const intentsList = [
     GatewayIntentBits.MessageContent
 ]
 
-class bot {
+class Bot {
     constructor(token, app_token, bot_prefix) {
         // Store the token in a variable
         this.token = token;
@@ -30,9 +31,12 @@ class bot {
     }
 }
 
-//* Add all the different methods to the bot class
-// Add the methods to load commands to the bot class
-bot.prototype.loadCommands = loadCommands;
-bot.prototype.initCommands = initCommands;
+Bot.prototype.loadCommands = loadCommands;
+Bot.prototype.initCommands = initCommands;
+Bot.prototype.registerCommand = registerCommand;
 
-module.exports = bot;
+Bot.prototype.loadEvents = loadEvents;
+Bot.prototype.initEvents = initEvents;
+Bot.prototype.registerEvent = registerEvent;
+
+module.exports = Bot;
