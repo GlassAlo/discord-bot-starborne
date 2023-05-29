@@ -5,7 +5,7 @@ module.exports = {
     once: true,
 
     async execute(bot, client) {
-        await bot.loadCommands();
+        await bot.loadCommands(true);
         console.log(`Logged in as ${client.user.tag}!`);
     },
 };

@@ -7,6 +7,8 @@ const { initEvents, loadEvents, registerEvent } = require("./loadEvents.js");
 const intentsList = [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildMessageReactions,
+    GatewayIntentBits.GuildEmojisAndStickers,
     GatewayIntentBits.GuildVoiceStates,
     GatewayIntentBits.MessageContent
 ]
@@ -21,8 +23,6 @@ class Bot {
         this.client = new Client({
             intents: intentsList,
         });
-        // Create a new Discord collection
-        this.client.commands = new Collection();
         // create the rest client
         this.rest = new REST({ version: "10" })
             .setToken(this.token);

@@ -1,6 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { Routes } = require('discord-api-types/v10');
+const { Collection } = require('discord.js');
 
 async function registerCommand(commandName, folderPath) {
     const commandPath = path.join(folderPath, commandName);
@@ -18,30 +19,46 @@ async function initCommands(fsFolder, pathToFolder) {
             const newFSFolder = fs.readdirSync(newPath);
 
             await this.initCommands(newFSFolder, newPath);
-        } else {
+        } else if (item.endsWith('.js')) {
             await this.registerCommand(item, pathToFolder);
+        } else {
+            console.log(`Could not load ${item}`);
         }
     }
 }
 
 // Init commands for all guilds
-async function loadCommands() {
+async function loadCommands(deleteCommands = false) {
     const commandsFolderPath = path.join(__dirname, '../commands');
     const commandFolders = fs.readdirSync(commandsFolderPath);
     this.commands_list = [];
+    this.client.commands = new Collection();
 
     await this.initCommands(commandFolders, commandsFolderPath);
 
     if (this.commands_list == null) {
         return
     }
+    if (deleteCommands) {
+        this.rest.put(Routes.applicationCommands(this.app_token), { body: [] })
+            .then(() => console.log('Successfully deleted all application commands.'))
+            .catch(console.error);
+    }
     // For each guild
     this.client.guilds.cache.forEach((guild) => {
+        if (deleteCommands) {
+            this.rest.put(Routes.applicationGuildCommands(this.app_token, guild.id), {
+                body: [],
+            }).then(() => {
+                console.log(`Cleared commands for ${guild.name}`);
+            }).catch(console.error);
+        }
+
         this.rest.put(Routes.applicationGuildCommands(this.app_token, guild.id), {
             body: this.commands_list,
-        })
-            .catch("ERROR : Loading commands = " + console.error);
-        console.log(`Initializing commands for ${guild.name}`);
+        }).then(() => {
+            console.log(`Loaded commands for ${guild.name}`);
+        }).catch("ERROR : Loading commands = " + console.error);
     });
 }
 

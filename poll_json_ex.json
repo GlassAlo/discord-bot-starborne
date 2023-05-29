@@ -1,0 +1,45 @@
+{
+    "title": "Poll example",
+    "rows": [
+        {
+            "question": "Ex question",
+            "choices": [
+                {
+                    "text": "Choice 1",
+                    "emoji": "👍",
+                    "role": "role1"
+                },
+                {
+                    "text": "Choice 2",
+                    "emoji": "👎",
+                    "role": "role2"
+                },
+                {
+                    "text": "Choice 3",
+                    "emoji": "🤷‍♂️",
+                    "role": "role3"
+                }
+            ]
+        },
+        {
+            "question": "Ex question 2",
+            "choices": [
+                {
+                    "text": "Choice 1_2",
+                    "emoji": "👍",
+                    "role": "role1_2"
+                },
+                {
+                    "text": "Choice 2_2",
+                    "emoji": "👎",
+                    "role": "role2_2"
+                },
+                {
+                    "text": "Choice 3_2",
+                    "emoji": "🤷‍♂️",
+                    "role": "role3_2"
+                }
+            ]
+        }
+    ]
+}

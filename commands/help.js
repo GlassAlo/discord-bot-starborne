@@ -5,7 +5,7 @@ module.exports = {
         .setName('help')
         .setDescription('Get help with the bot'),
 
-    async execute(interaction) {
-        await interaction.reply('HELP');
+    async execute(bot, interaction) {
+        await interaction.reply('HELeP');
     },
 };
