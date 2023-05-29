@@ -54,7 +54,9 @@ module.exports = {
             });
         }
 
-        const collector = message.createReactionCollector({ filter });
+        const timer = pollValues.timer ?? null;
+
+        const collector = timer ? message.createReactionCollector({ filter, time: timer * 1000 }) : message.createReactionCollector({ filter });
 
         collector.on('collect', (reaction, user) => {
             const row = rows.find(row => {
@@ -70,7 +72,7 @@ module.exports = {
             const choice = row.choices.find(choice => {
                 return choice.emoji === reaction.emoji.name;
             });
-            if (!choice) {
+            if (!choice || !choice.role) {
                 return;
             }
 
@@ -85,10 +87,8 @@ module.exports = {
 
             if (member.roles.cache.has(role.id)) {
                 member.roles.remove(role);
-                interaction.channel.send(`Removed role ${role.name} from ${member.user.username}`);
             } else {
                 member.roles.add(role);
-                interaction.channel.send(`Added role ${role.name} to ${member.user.username}`);
             }
         });
     }
