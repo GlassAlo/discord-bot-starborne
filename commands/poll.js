@@ -21,7 +21,7 @@ module.exports = {
 
         const embed = new EmbedBuilder()
             .setTitle(title)
-            .setColor('#0099ff')
+            .setColor(0xffbb00)
             .setTimestamp()
             .addFields(
                 rows.map(row => {
