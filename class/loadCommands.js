@@ -41,7 +41,7 @@ async function loadCommands(deleteCommands = false) {
     }
     if (deleteCommands) {
         this.rest.put(Routes.applicationCommands(this.app_token), { body: [] })
-            .then(() => console.log('Successfully deleted all application commands.'))
+            .then(() => console.log('Successfully deleted global commands.'))
             .catch(console.error);
     }
     // For each guild
@@ -60,6 +60,7 @@ async function loadCommands(deleteCommands = false) {
             console.log(`Loaded commands for ${guild.name}`);
         }).catch("ERROR : Loading commands = " + console.error);
     });
+    console.log(`Loaded commands for ${this.client.guilds.cache.size} guilds`);
 }
 
 module.exports = {
